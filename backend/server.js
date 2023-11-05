@@ -17,6 +17,9 @@ const db = mysql.createConnection({
     port: 3306,
 });
 
+app.use(express.json());
+app.use(express.urlencoded());
+
 app.listen(8081, () => {
     console.log('listening...');
 });
@@ -39,6 +42,23 @@ app.get('/renter', (request, response) => {
 
         return response.json(data);
     });
+});
+
+app.post('/renter', (request, response) => {
+    const newItem = request.body;
+    const { first_name, last_name, address, id } = request.body;
+    const values = [id, first_name, last_name, address];
+    const sql = `INSERT INTO renter (id, first_name, last_name, address) VALUES (?, ?, ?, ?)`;
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Product created successfully', renter: id });
+    });
+
+    console.log(JSON.stringify(newItem));
 });
 
 // ========================================================================================================================================================================================================================

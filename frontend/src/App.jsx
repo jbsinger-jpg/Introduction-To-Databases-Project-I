@@ -19,6 +19,30 @@ function App() {
     ]);
   }, []);
 
+  const addRenter = async (event) => {
+    event.preventDefault();
+
+    await fetch(RENTER_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: 4,
+        first_name: "Jacob",
+        last_name: "Singer",
+        address: "935 Alabama Rd.",
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success: ' + JSON.stringify(data));
+      })
+      .catch((error) => {
+        console.error('Error: ' + error);
+      });
+  };
+
   return (
     <div>
       <table>
@@ -141,6 +165,11 @@ function App() {
       <div>
         ==============================================================
       </div>
+      <button
+        onClick={addRenter}
+      >
+        Create renter
+      </button>
     </div>
   );
 }
