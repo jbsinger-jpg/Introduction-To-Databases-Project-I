@@ -5,6 +5,7 @@ const BASE_URL = 'http://localhost:8081/';
 // Example: app.get('/renter' ...
 const RENTER_URL = BASE_URL + 'renter';
 const PRODUCT_URL = BASE_URL + 'product';
+const PRODUCT_OWNER_URL = BASE_URL + "product_owners";
 const SELLER_URL = BASE_URL + 'seller';
 
 // ======================================================
@@ -19,4 +20,4 @@ const getInitialData = (URLs) => {
     }
 };
 
-export { RENTER_URL, PRODUCT_URL, SELLER_URL, getInitialData };
+export { RENTER_URL, PRODUCT_URL, SELLER_URL, PRODUCT_OWNER_URL, getInitialData };

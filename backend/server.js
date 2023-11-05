@@ -55,6 +55,34 @@ app.get('/product', (request, response) => {
     });
 });
 
+app.get('/product_owners', (request, response) => {
+    const sql = "SELECT first_name, last_name FROM seller " +
+        "INNER JOIN product ON product.owner = seller.id";
+
+    db.query(sql, (err, data) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json(data);
+    });
+});
+
+app.get('/product_owners/:id', (request, response) => {
+    const id = request.params.id;
+    const sql = "SELECT first_name, last_name FROM seller " +
+        "INNER JOIN product ON product.owner = seller.id " +
+        "WHERE product.id = ?";
+
+    db.query(sql, [id], (err, data) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json(data);
+    });
+});
+
 // ======================================================
 // seller CRUD operations
 // ======================================================

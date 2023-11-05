@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { PRODUCT_URL, RENTER_URL, SELLER_URL, getInitialData } from './backend_config';
-import { getProductOwner } from './foreign_key_data';
+import { PRODUCT_OWNER_URL, PRODUCT_URL, RENTER_URL, SELLER_URL, getInitialData } from './backend_config';
 
 function App() {
   const [renterData, setRenterData] = useState(null);
   const [productData, setProductData] = useState(null);
   const [sellerData, setSellerData] = useState(null);
+  const [productOwners, setProductOwners] = useState(null);
+  const [productOwnerByProductId, setProductOwnerByProductId] = useState(null);
 
   useEffect(() => {
     getInitialData([
       { url: RENTER_URL, setData: setRenterData },
       { url: SELLER_URL, setData: setSellerData },
       { url: PRODUCT_URL, setData: setProductData },
+      { url: PRODUCT_OWNER_URL, setData: setProductOwners },
+      { url: PRODUCT_OWNER_URL + "/1", setData: setProductOwnerByProductId },
     ]);
   }, []);
 
@@ -103,10 +106,40 @@ function App() {
         </tbody>
       </table>
       <div>
-        Product ID 1 Owner:
+        ==============================================================
       </div>
       <div>
-        {(productData && sellerData) && getProductOwner(1, productData, sellerData)}
+        All Product Owners:
+      </div>
+      <div>
+        {productOwners && productOwners.map((productOwner, i) => {
+          return (
+            <div key={i}>
+              {productOwner.first_name} {productOwner.last_name}
+            </div>
+          );
+        })}
+      </div>
+      <div>
+        ==============================================================
+      </div>
+      <div>
+        ==============================================================
+      </div>
+      <div>
+        Specified by ID:
+      </div>
+      <div>
+        {productOwnerByProductId && productOwnerByProductId.map((productOwner, i) => {
+          return (
+            <div key={i}>
+              {productOwner.first_name} {productOwner.last_name}
+            </div>
+          );
+        })}
+      </div>
+      <div>
+        ==============================================================
       </div>
     </div>
   );
