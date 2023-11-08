@@ -30,6 +30,12 @@ export default function LandingPage() {
             });
     };
 
+    const handleClearEntries = () => {
+        setAddress("");
+        setFirstName("");
+        setLastName("");
+    };
+
     return (
         <VStack alignItems="flex-start">
             <Heading>Add Renter</Heading>
@@ -60,7 +66,7 @@ export default function LandingPage() {
                         </VStack>
                         <HStack bottom="0" position="fixed" w="90vw">
                             <Button type="submit"> Submit </Button>
-                            <Button> Clear </Button>
+                            <Button onClick={handleClearEntries}> Clear </Button>
                         </HStack>
                     </VStack>
                 </form>
