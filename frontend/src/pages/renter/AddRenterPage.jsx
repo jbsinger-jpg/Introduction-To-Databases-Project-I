@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { RENTER_URL } from '../backend_config';
 import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
+import { useState } from 'react';
+import { RENTER_URL } from '../../backend_config';
 
-export default function RemoveRenterPage() {
+export default function AddRenterPage() {
     const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
 
-    const removeRenter = async (event) => {
+    const addRenter = async (event) => {
         event.preventDefault();
 
         await fetch(RENTER_URL, {
@@ -38,11 +38,11 @@ export default function RemoveRenterPage() {
 
     return (
         <VStack alignItems="flex-start">
-            <Heading>Remove Renter</Heading>
+            <Heading>Add Renter</Heading>
             <Box
                 display="flex"
             >
-                <form onSubmit={removeRenter}>
+                <form onSubmit={addRenter}>
                     <VStack
                         alignItems="flex-start"
                     >
