@@ -1,75 +1,45 @@
-import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
-import { RENTER_URL } from '../backend_config';
+import { Box, Select, Tab, TabList, TabPanel, TabPanels, Tabs, VStack } from '@chakra-ui/react';
 
 export default function LandingPage() {
-    const [address, setAddress] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-
-    const addRenter = async (event) => {
-        event.preventDefault();
-
-        await fetch(RENTER_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                address: address
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success: ' + JSON.stringify(data));
-            })
-            .catch((error) => {
-                console.error('Error: ' + error);
-            });
-    };
-
-    const handleClearEntries = () => {
-        setAddress("");
-        setFirstName("");
-        setLastName("");
-    };
-
     return (
-        <VStack alignItems="flex-start">
-            <Heading>Add Renter</Heading>
-            <Box
-                display="flex"
+        <Box
+            alignItems="start"
+        >
+            <Tabs
+                isFitted
+                w="60vw"
             >
-                <form onSubmit={addRenter}>
-                    <VStack
-                        alignItems="flex-start"
-                    >
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>First Name</FormLabel>
-                            <Input w="50vw" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
+                <TabList>
+                    <Tab>Renter</Tab>
+                    <Tab>Seller</Tab>
+                    <Tab>Product</Tab>
+                </TabList>
+                <TabPanels>
+                    <TabPanel>
+                        <VStack>
+                            <Select>
+                                <option value='add'>Add</option>
+                                <option value='update'>Update</option>
+                                <option value='delete'>Delete</option>
+                            </Select>
                         </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Last Name</FormLabel>
-                            <Input w="50vw" value={lastName} onChange={(event) => setLastName(event.target.value)} />
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Address</FormLabel>
-                            <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
-                        </VStack>
-                        <HStack bottom="0" position="fixed" w="90vw">
-                            <Button type="submit"> Submit </Button>
-                            <Button onClick={handleClearEntries}> Clear </Button>
-                        </HStack>
-                    </VStack>
-                </form>
-            </Box>
-        </VStack>);
+                    </TabPanel>
+                    <TabPanel>
+                        <Select>
+                            <option value='add'>Add</option>
+                            <option value='update'>Update</option>
+                            <option value='delete'>Delete</option>
+                        </Select>
+                    </TabPanel>
+                    <TabPanel>
+                        <Select>
+                            <option value='add'>Add</option>
+                            <option value='update'>Update</option>
+                            <option value='delete'>Delete</option>
+                        </Select>
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
+        </Box>
+    );
 }
