@@ -5,6 +5,14 @@ import AddRenterPage from './renter/AddRenterPage';
 import UpdateRenterPage from './renter/UpdateRenterPage';
 import RemoveRenterPage from './renter/RemoveRenterPage';
 
+import AddSellerPage from './seller/AddSellerPage';
+import UpdateSeller from './seller/UpdateSeller';
+import RemoveSeller from './seller/RemoveSeller';
+
+import AddProductPage from './product/AddProductPage';
+import UpdateProductPage from './product/UpdateProductPage';
+import RemoveProductPage from './product/RemoveProductPage';
+
 export default function LandingPage() {
     const [seletedCRUDOperation, setSeletedCRUDOperation] = useState("add");
 
@@ -46,6 +54,9 @@ export default function LandingPage() {
                             <option value='update'>Update</option>
                             <option value='delete'>Delete</option>
                         </Select>
+                        {seletedCRUDOperation === "add" && <AddSellerPage />}
+                        {seletedCRUDOperation === "update" && <UpdateSeller />}
+                        {seletedCRUDOperation === "delete" && <RemoveSeller />}
                     </TabPanel>
                     <TabPanel>
                         <Select
@@ -56,6 +67,9 @@ export default function LandingPage() {
                             <option value='update'>Update</option>
                             <option value='delete'>Delete</option>
                         </Select>
+                        {seletedCRUDOperation === "add" && <AddProductPage />}
+                        {seletedCRUDOperation === "update" && <UpdateProductPage />}
+                        {seletedCRUDOperation === "delete" && <RemoveProductPage />}
                     </TabPanel>
                 </TabPanels>
             </Tabs>
