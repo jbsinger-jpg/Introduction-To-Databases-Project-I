@@ -163,3 +163,47 @@ app.get('/seller', (request, response) => {
         return response.json(data);
     });
 });
+
+app.delete('/seller', (request, response) => {
+    const { first_name, last_name, address } = request.body;
+    const values = [first_name, last_name, address];
+
+    const selectSql = `
+      SELECT * FROM seller
+      WHERE first_name = ? AND last_name = ? AND address = ?
+      LIMIT 1;`;
+
+    const deleteSql = `
+      DELETE FROM seller
+      WHERE first_name = ? AND last_name = ? AND address = ?;`;
+
+    // Execute the select query to get the renter
+    db.query(selectSql, values, (error, result) => {
+        if (error) {
+            console.error('Error executing select query:', error);
+            response.status(500).send('Internal Server Error');
+            return;
+        }
+
+        // Check if a renter was found
+        if (result.length === 0) {
+            response.status(404).send('Renter not found');
+            return;
+        }
+
+        // Store the renter information
+        const seller = result[0];
+
+        // Execute the delete query
+        db.query(deleteSql, values, (deleteError) => {
+            if (deleteError) {
+                console.error('Error executing delete query:', deleteError);
+                response.status(500).send('Internal Server Error');
+                return;
+            }
+
+            // Send the deleted renter information back as JSON
+            response.json(seller);
+        });
+    });
+});
