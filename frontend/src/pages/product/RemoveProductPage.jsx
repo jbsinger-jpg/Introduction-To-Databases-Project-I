@@ -1,44 +1,50 @@
 import { useState } from 'react';
-import { PRODUCT_URL } from '../../backend_config';
 import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
 
+import { PRODUCT_URL } from '../../backend_config';
+
 export default function RemoveProductPage() {
-    const [address, setAddress] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState("");
+    const [renter, setRenter] = useState("");
 
     const removeProduct = async (event) => {
         event.preventDefault();
 
-        await fetch(PRODUCT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                address: address
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success: ' + JSON.stringify(data));
-            })
-            .catch((error) => {
-                console.error('Error: ' + error);
+        try {
+            const response = await fetch(PRODUCT_URL, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    price: price,
+                    renter: renter,
+                    description: description
+                }),
             });
+
+            if (!response.ok) {
+                throw new Error(`DELETE request failed with status ${response.status}`);
+            }
+
+            // Process the successful response
+            const result = await response.json();
+            console.log('DELETE successful:', result);
+        } catch (error) {
+            console.error('DELETE request error:', error.message);
+        }
     };
 
     const handleClearEntries = () => {
-        setAddress("");
-        setFirstName("");
-        setLastName("");
+        setDescription("");
+        setPrice("");
+        setRenter("");
     };
 
     return (
         <VStack alignItems="flex-start">
-            <Heading>Add Seller</Heading>
+            <Heading>Remove Product</Heading>
             <Box
                 display="flex"
             >
@@ -49,20 +55,20 @@ export default function RemoveProductPage() {
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>First Name</FormLabel>
-                            <Input w="50vw" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
+                            <FormLabel>Price</FormLabel>
+                            <Input w="50vw" value={price} onChange={(event) => setPrice(event.target.value)} />
                         </VStack>
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>Last Name</FormLabel>
-                            <Input w="50vw" value={lastName} onChange={(event) => setLastName(event.target.value)} />
+                            <FormLabel>Renter</FormLabel>
+                            <Input w="50vw" value={renter} onChange={(event) => setRenter(event.target.value)} />
                         </VStack>
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>Address</FormLabel>
-                            <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
+                            <FormLabel>Description</FormLabel>
+                            <Input w="50vw" value={description} onChange={(event) => setDescription(event.target.value)} />
                         </VStack>
                         <HStack bottom="0" position="fixed" w="90vw">
                             <Button type="submit"> Submit </Button>

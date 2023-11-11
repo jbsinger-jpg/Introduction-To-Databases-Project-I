@@ -3,9 +3,9 @@ import { PRODUCT_URL } from '../../backend_config';
 import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
 
 export default function AddProductPage() {
-    const [address, setAddress] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState("");
+    const [renter, setRenter] = useState("");
 
     const addProduct = async (event) => {
         event.preventDefault();
@@ -16,9 +16,9 @@ export default function AddProductPage() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                address: address
+                price: price,
+                renter: renter,
+                description: description
             })
         })
             .then(response => response.json())
@@ -31,14 +31,14 @@ export default function AddProductPage() {
     };
 
     const handleClearEntries = () => {
-        setAddress("");
-        setFirstName("");
-        setLastName("");
+        setDescription("");
+        setPrice("");
+        setRenter("");
     };
 
     return (
         <VStack alignItems="flex-start">
-            <Heading>Add Seller</Heading>
+            <Heading>Add Product</Heading>
             <Box
                 display="flex"
             >
@@ -49,20 +49,20 @@ export default function AddProductPage() {
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>First Name</FormLabel>
-                            <Input w="50vw" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
+                            <FormLabel>Price</FormLabel>
+                            <Input w="50vw" value={price} onChange={(event) => setPrice(event.target.value)} />
                         </VStack>
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>Last Name</FormLabel>
-                            <Input w="50vw" value={lastName} onChange={(event) => setLastName(event.target.value)} />
+                            <FormLabel>Renter</FormLabel>
+                            <Input w="50vw" value={renter} onChange={(event) => setRenter(event.target.value)} />
                         </VStack>
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>Address</FormLabel>
-                            <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
+                            <FormLabel>Description</FormLabel>
+                            <Input w="50vw" value={description} onChange={(event) => setDescription(event.target.value)} />
                         </VStack>
                         <HStack bottom="0" position="fixed" w="90vw">
                             <Button type="submit"> Submit </Button>
