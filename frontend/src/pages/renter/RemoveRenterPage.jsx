@@ -10,25 +10,31 @@ export default function RemoveRenterPage() {
     const removeRenter = async (event) => {
         event.preventDefault();
 
-        await fetch(RENTER_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                address: address
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success: ' + JSON.stringify(data));
-            })
-            .catch((error) => {
-                console.error('Error: ' + error);
+        try {
+            const response = await fetch(RENTER_URL, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    address: address,
+                }),
             });
+
+            if (!response.ok) {
+                throw new Error(`DELETE request failed with status ${response.status}`);
+            }
+
+            // Process the successful response
+            const result = await response.json();
+            console.log('DELETE successful:', result);
+        } catch (error) {
+            console.error('DELETE request error:', error.message);
+        }
     };
+
 
     const handleClearEntries = () => {
         setAddress("");

@@ -44,18 +44,62 @@ app.get('/renter', (request, response) => {
     });
 });
 
+app.delete('/renter', (request, response) => {
+    const { first_name, last_name, address } = request.body;
+    const values = [first_name, last_name, address];
+
+    const selectSql = `
+      SELECT * FROM renter
+      WHERE first_name = ? AND last_name = ? AND address = ?
+      LIMIT 1;`;
+
+    const deleteSql = `
+      DELETE FROM renter
+      WHERE first_name = ? AND last_name = ? AND address = ?;`;
+
+    // Execute the select query to get the renter
+    db.query(selectSql, values, (error, result) => {
+        if (error) {
+            console.error('Error executing select query:', error);
+            response.status(500).send('Internal Server Error');
+            return;
+        }
+
+        // Check if a renter was found
+        if (result.length === 0) {
+            response.status(404).send('Renter not found');
+            return;
+        }
+
+        // Store the renter information
+        const renter = result[0];
+
+        // Execute the delete query
+        db.query(deleteSql, values, (deleteError) => {
+            if (deleteError) {
+                console.error('Error executing delete query:', deleteError);
+                response.status(500).send('Internal Server Error');
+                return;
+            }
+
+            // Send the deleted renter information back as JSON
+            response.json(renter);
+        });
+    });
+});
+
 app.post('/renter', (request, response) => {
     const newItem = request.body;
-    const { first_name, last_name, address, id } = request.body;
-    const values = [id, first_name, last_name, address];
-    const sql = `INSERT INTO renter (id, first_name, last_name, address) VALUES (?, ?, ?, ?)`;
+    const { first_name, last_name, address } = request.body;
+    const values = [first_name, last_name, address];
+    const sql = `INSERT INTO renter (first_name, last_name, address) VALUES (?, ?, ?)`;
 
     db.query(sql, values, (err, result) => {
         if (err) {
             return response.json(err);
         }
 
-        return response.json({ message: 'Product created successfully', renter: id });
+        return response.json({ message: 'Product created successfully', renter: { first_name, last_name, address } });
     });
 
     console.log(JSON.stringify(newItem));
