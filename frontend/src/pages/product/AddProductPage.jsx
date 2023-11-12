@@ -1,11 +1,14 @@
-import { useState } from 'react';
-import { PRODUCT_URL } from '../../backend_config';
-import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { PRODUCT_URL, SELLER_URL, getInitialData } from '../../backend_config';
+import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack } from '@chakra-ui/react';
 
 export default function AddProductPage() {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [renter, setRenter] = useState("");
+    const [seller, setSeller] = useState("");
+    const [sellerOptions, setSellerOptions] = useState([]);
+    const [sellerData, setSellerData] = useState(null);
+    const [sellerDataIsLoaded, setSellerDataIsLoaded] = useState(false);
 
     const addProduct = async (event) => {
         event.preventDefault();
@@ -17,7 +20,7 @@ export default function AddProductPage() {
             },
             body: JSON.stringify({
                 price: price,
-                renter: renter,
+                seller: seller,
                 description: description
             })
         })
@@ -33,8 +36,24 @@ export default function AddProductPage() {
     const handleClearEntries = () => {
         setDescription("");
         setPrice("");
-        setRenter("");
+        setSeller("");
     };
+
+    useEffect(() => {
+        if (!sellerDataIsLoaded) {
+            getInitialData([{ url: SELLER_URL, setData: setSellerData }]);
+            if (sellerData) {
+                setSellerDataIsLoaded(true);
+                let options = [];
+                for (let i = 0; i < sellerData.length; i++) {
+                    options.push({ label: sellerData[i].first_name + " " + sellerData[i].last_name, key: sellerData[i].id, value: sellerData[i].id });
+                }
+
+                setSellerOptions(options);
+            }
+        }
+        // eslint-disable-next-line
+    }, [sellerData]);
 
     return (
         <VStack alignItems="flex-start">
@@ -55,8 +74,22 @@ export default function AddProductPage() {
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>Renter</FormLabel>
-                            <Input w="50vw" value={renter} onChange={(event) => setRenter(event.target.value)} />
+                            <FormLabel>Seller</FormLabel>
+                            <Select w="50vw"
+                                value={seller}
+                                onChange={(event) => setSeller(event.target.value)}
+                            >
+                                {sellerOptions && sellerOptions.map(seller => {
+                                    return (
+                                        <option
+                                            key={seller.key}
+                                            value={seller.value}
+                                        >
+                                            {seller.label}
+                                        </option>
+                                    );
+                                })}
+                            </Select>
                         </VStack>
                         <VStack
                             alignItems="flex-start"

@@ -164,6 +164,23 @@ app.get('/seller', (request, response) => {
     });
 });
 
+app.post('/seller', (request, response) => {
+    const newItem = request.body;
+    const { first_name, last_name, address } = request.body;
+    const values = [first_name, last_name, address];
+    const sql = `INSERT INTO seller (first_name, last_name, address) VALUES (?, ?, ?)`;
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Product created successfully', seller: { first_name, last_name, address } });
+    });
+
+    console.log(JSON.stringify(newItem));
+});
+
 app.delete('/seller', (request, response) => {
     const { first_name, last_name, address } = request.body;
     const values = [first_name, last_name, address];
