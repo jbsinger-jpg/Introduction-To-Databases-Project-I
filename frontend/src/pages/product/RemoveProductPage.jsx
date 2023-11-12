@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Box, Button, FormLabel, HStack, Heading, Select, VStack } from '@chakra-ui/react';
 
-import { PRODUCT_URL } from '../../backend_config';
+import { PRODUCT_URL, getInitialData } from '../../backend_config';
 
 export default function RemoveProductPage() {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
     const [renter, setRenter] = useState("");
+
+    const [productData, setProductData] = useState(null);
+    const [productOptions, setProductOptions] = useState(null);
+    const [productDataIsLoaded, setProductDataIsLoaded] = useState(false);
+    const [selectedProductOption, setSelectedProductOption] = useState("");
 
     const removeProduct = async (event) => {
         event.preventDefault();
@@ -42,41 +47,67 @@ export default function RemoveProductPage() {
         setRenter("");
     };
 
+    useEffect(() => {
+        if (!productDataIsLoaded) {
+            getInitialData([{ url: PRODUCT_URL, setData: setProductData }]);
+
+            if (productData) {
+                setProductDataIsLoaded(true);
+                let options = [];
+
+                for (let i = 0; i < productData.length; i++) {
+                    options.push({ label: productData[i].description, key: productData[i].id, value: productData[i].id });
+                }
+
+                setProductOptions(options);
+            }
+        }
+        // eslint-disable-next-line
+    }, [productData]);
+
     return (
-        <VStack alignItems="flex-start">
-            <Heading>Remove Product</Heading>
-            <Box
-                display="flex"
-            >
-                <form onSubmit={removeProduct}>
-                    <VStack
-                        alignItems="flex-start"
+        <>
+            {productData && productData.length ?
+                <VStack alignItems="flex-start">
+                    <Heading>Remove Product</Heading>
+                    <Box
+                        display="flex"
                     >
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Price</FormLabel>
-                            <Input w="50vw" value={price} onChange={(event) => setPrice(event.target.value)} />
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Renter</FormLabel>
-                            <Input w="50vw" value={renter} onChange={(event) => setRenter(event.target.value)} />
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Description</FormLabel>
-                            <Input w="50vw" value={description} onChange={(event) => setDescription(event.target.value)} />
-                        </VStack>
-                        <HStack bottom="0" position="fixed" w="90vw">
-                            <Button type="submit"> Submit </Button>
-                            <Button onClick={handleClearEntries}> Clear </Button>
-                        </HStack>
-                    </VStack>
-                </form>
-            </Box>
-        </VStack>
+                        <form onSubmit={removeProduct}>
+                            <VStack
+                                alignItems="flex-start"
+                            >
+                                <FormLabel>Product Options</FormLabel>
+                                <Select w="50vw"
+                                    value={selectedProductOption}
+                                    onChange={(event) => setSelectedProductOption(event.target.value)}
+                                >
+                                    {productOptions && productOptions.map(product => {
+                                        return (
+                                            <option
+                                                key={product.key}
+                                                value={product.value}
+                                            >
+                                                {product.label}
+                                            </option>
+                                        );
+                                    })}
+                                </Select>
+                                <HStack bottom="0" position="fixed" w="90vw">
+                                    <Button type="submit"> Submit </Button>
+                                    <Button onClick={handleClearEntries}> Clear </Button>
+                                </HStack>
+                            </VStack>
+                        </form>
+                    </Box>
+                </VStack>
+                :
+                <VStack h="70vh" w="50vw" alignItems="center" justifyContent="center">
+                    <div>
+                        No Products Exist Add One!
+                    </div>
+                </VStack>
+            }
+        </>
     );
 }

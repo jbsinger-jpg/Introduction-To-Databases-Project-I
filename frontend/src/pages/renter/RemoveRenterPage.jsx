@@ -1,11 +1,16 @@
-import { useState } from 'react';
-import { RENTER_URL } from '../../backend_config';
-import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { RENTER_URL, getInitialData } from '../../backend_config';
+import { Box, Button, FormLabel, HStack, Heading, Select, VStack } from '@chakra-ui/react';
 
 export default function RemoveRenterPage() {
     const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+
+    const [renterData, setRenterData] = useState(null);
+    const [renterOptions, setRenterOptions] = useState(null);
+    const [selectedRenterOption, setselectedRenterOption] = useState("");
+    const [renterDataIsLoaded, setRenterDataIsLoaded] = useState(false);
 
     const removeRenter = async (event) => {
         event.preventDefault();
@@ -42,41 +47,67 @@ export default function RemoveRenterPage() {
         setLastName("");
     };
 
+    useEffect(() => {
+        if (!renterDataIsLoaded) {
+            getInitialData([{ url: RENTER_URL, setData: setRenterData }]);
+
+            if (renterData) {
+                setRenterDataIsLoaded(true);
+                let options = [];
+                for (let i = 0; i < renterData.length; i++) {
+                    options.push({ label: renterData[i].first_name + " " + renterData[i].last_name, key: renterData[i].id, value: renterData[i].id });
+                }
+
+                setRenterOptions(options);
+            }
+        }
+        // eslint-disable-next-line
+    }, [renterData]);
+
     return (
-        <VStack alignItems="flex-start">
-            <Heading>Remove Renter</Heading>
-            <Box
-                display="flex"
-            >
-                <form onSubmit={removeRenter}>
-                    <VStack
-                        alignItems="flex-start"
+        <>
+            {renterData && renterData.length ?
+                <VStack alignItems="flex-start">
+                    <Heading>Remove Renter</Heading>
+                    <Box
+                        display="flex"
                     >
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>First Name</FormLabel>
-                            <Input w="50vw" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Last Name</FormLabel>
-                            <Input w="50vw" value={lastName} onChange={(event) => setLastName(event.target.value)} />
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Address</FormLabel>
-                            <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
-                        </VStack>
-                        <HStack bottom="0" position="fixed" w="90vw">
-                            <Button type="submit"> Submit </Button>
-                            <Button onClick={handleClearEntries}> Clear </Button>
-                        </HStack>
-                    </VStack>
-                </form>
-            </Box>
-        </VStack>
+                        <form onSubmit={removeRenter}>
+                            <VStack
+                                alignItems="flex-start"
+                            >
+                                <FormLabel>Renter Options</FormLabel>
+                                <Select w="50vw"
+                                    value={selectedRenterOption}
+                                    onChange={(event) => setselectedRenterOption(event.target.value)}
+                                >
+                                    {renterOptions && renterOptions.map(renter => {
+                                        return (
+                                            <option
+                                                key={renter.key}
+                                                value={renter.value}
+                                            >
+                                                {renter.label}
+                                            </option>
+                                        );
+                                    })}
+                                </Select>
+                                <HStack bottom="0" position="fixed" w="90vw">
+                                    <Button type="submit"> Submit </Button>
+                                    <Button onClick={handleClearEntries}> Clear </Button>
+                                </HStack>
+                            </VStack>
+                        </form>
+                    </Box>
+                </VStack>
+                :
+                <VStack h="70vh" w="50vw" alignItems="center" justifyContent="center">
+                    <div>
+                        No Renters Exist Add One!
+                    </div>
+                </VStack>
+            }
+
+        </>
     );
 }
