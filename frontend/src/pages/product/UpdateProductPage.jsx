@@ -6,9 +6,15 @@ export default function UpdateProductPage() {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
     const [seller, setSeller] = useState("");
+
     const [sellerOptions, setSellerOptions] = useState([]);
     const [sellerData, setSellerData] = useState(null);
     const [sellerDataIsLoaded, setSellerDataIsLoaded] = useState(false);
+
+    const [productData, setProductData] = useState(null);
+    const [productDataIsLoaded, setProductDataIsLoaded] = useState(false);
+    const [productOptions, setProductOptions] = useState(null);
+    const [selectedProductOption, setSelectedProductOption] = useState(null);
 
     const updateProduct = async (event) => {
         event.preventDefault();
@@ -42,6 +48,7 @@ export default function UpdateProductPage() {
     useEffect(() => {
         if (!sellerDataIsLoaded) {
             getInitialData([{ url: SELLER_URL, setData: setSellerData }]);
+
             if (sellerData) {
                 setSellerDataIsLoaded(true);
                 let options = [];
@@ -55,6 +62,22 @@ export default function UpdateProductPage() {
         // eslint-disable-next-line
     }, [sellerData]);
 
+    useEffect(() => {
+        getInitialData([{ url: PRODUCT_URL, setData: setProductData }]);
+
+        if (productData) {
+            setProductDataIsLoaded(true);
+            let options = [];
+
+            for (let i = 0; i < productData.length; i++) {
+                options.push({ label: productData[i].description, key: productData[i].id, value: productData[i].id });
+            }
+
+            setProductOptions(options);
+        }
+        // eslint-disable-next-line
+    }, [productData]);
+
     return (
         <VStack alignItems="flex-start">
             <Heading>Update Product</Heading>
@@ -65,6 +88,26 @@ export default function UpdateProductPage() {
                     <VStack
                         alignItems="flex-start"
                     >
+                        <VStack
+                            alignItems="flex-start"
+                        >
+                            <FormLabel>Product Options</FormLabel>
+                            <Select w="50vw"
+                                value={selectedProductOption}
+                                onChange={(event) => setSelectedProductOption(event.target.value)}
+                            >
+                                {productOptions && productOptions.map(product => {
+                                    return (
+                                        <option
+                                            key={product.key}
+                                            value={product.value}
+                                        >
+                                            {product.label}
+                                        </option>
+                                    );
+                                })}
+                            </Select>
+                        </VStack>
                         <VStack
                             alignItems="flex-start"
                         >

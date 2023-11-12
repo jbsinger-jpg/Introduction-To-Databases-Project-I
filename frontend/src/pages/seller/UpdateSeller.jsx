@@ -72,7 +72,7 @@ export default function UpdateSeller() {
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>Seller</FormLabel>
+                            <FormLabel>Seller Options</FormLabel>
                             <Select w="50vw"
                                 value={selectedSellerOption}
                                 onChange={(event) => setSelectedSellerOption(event.target.value)}
