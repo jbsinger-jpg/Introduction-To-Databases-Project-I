@@ -81,74 +81,84 @@ export default function UpdateProductPage() {
     }, [productData]);
 
     return (
-        <VStack alignItems="flex-start">
-            <Heading>Update Product</Heading>
-            <Box
-                display="flex"
-            >
-                <form onSubmit={updateProduct}>
-                    <VStack
-                        alignItems="flex-start"
+        <>
+            {productData && productData.length ?
+                <VStack alignItems="flex-start">
+                    <Heading>Update Product</Heading>
+                    <Box
+                        display="flex"
                     >
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Product Options</FormLabel>
-                            <Select w="50vw"
-                                value={selectedProductOption}
-                                onChange={(event) => setSelectedProductOption(event.target.value)}
+                        <form onSubmit={updateProduct}>
+                            <VStack
+                                alignItems="flex-start"
                             >
-                                {productOptions && productOptions.map(product => {
-                                    return (
-                                        <option
-                                            key={product.key}
-                                            value={product.value}
-                                        >
-                                            {product.label}
-                                        </option>
-                                    );
-                                })}
-                            </Select>
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Price</FormLabel>
-                            <Input w="50vw" value={price} onChange={(event) => setPrice(event.target.value)} />
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Seller</FormLabel>
-                            <Select w="50vw"
-                                value={seller}
-                                onChange={(event) => setSeller(event.target.value)}
-                            >
-                                {sellerOptions && sellerOptions.map(seller => {
-                                    return (
-                                        <option
-                                            key={seller.key}
-                                            value={seller.value}
-                                        >
-                                            {seller.label}
-                                        </option>
-                                    );
-                                })}
-                            </Select>
-                        </VStack>
-                        <VStack
-                            alignItems="flex-start"
-                        >
-                            <FormLabel>Description</FormLabel>
-                            <Input w="50vw" value={description} onChange={(event) => setDescription(event.target.value)} />
-                        </VStack>
-                        <HStack bottom="0" position="fixed" w="90vw">
-                            <Button type="submit"> Submit </Button>
-                            <Button onClick={handleClearEntries}> Clear </Button>
-                        </HStack>
-                    </VStack>
-                </form>
-            </Box>
-        </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>Product Options</FormLabel>
+                                    <Select w="50vw"
+                                        value={selectedProductOption}
+                                        onChange={(event) => setSelectedProductOption(event.target.value)}
+                                    >
+                                        {productOptions && productOptions.map(product => {
+                                            return (
+                                                <option
+                                                    key={product.key}
+                                                    value={product.value}
+                                                >
+                                                    {product.label}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>Price</FormLabel>
+                                    <Input w="50vw" value={price} onChange={(event) => setPrice(event.target.value)} />
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>Seller</FormLabel>
+                                    <Select w="50vw"
+                                        value={seller}
+                                        onChange={(event) => setSeller(event.target.value)}
+                                    >
+                                        {sellerOptions && sellerOptions.map(seller => {
+                                            return (
+                                                <option
+                                                    key={seller.key}
+                                                    value={seller.value}
+                                                >
+                                                    {seller.label}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>Description</FormLabel>
+                                    <Input w="50vw" value={description} onChange={(event) => setDescription(event.target.value)} />
+                                </VStack>
+                                <HStack bottom="0" position="fixed" w="90vw">
+                                    <Button type="submit"> Submit </Button>
+                                    <Button onClick={handleClearEntries}> Clear </Button>
+                                </HStack>
+                            </VStack>
+                        </form>
+                    </Box>
+                </VStack>
+                :
+                <VStack h="70vh" w="50vw" alignItems="center" justifyContent="center">
+                    <div>
+                        No Products Exist Add One!
+                    </div>
+                </VStack>
+            }
+        </>
     );
 }
