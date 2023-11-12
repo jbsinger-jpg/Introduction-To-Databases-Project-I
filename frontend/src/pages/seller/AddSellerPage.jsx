@@ -1,4 +1,4 @@
-import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
+import { Box, Button, FormLabel, HStack, Heading, Input, VStack, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { SELLER_URL } from '../../backend_config';
 
@@ -6,6 +6,7 @@ export default function AddSellerPage() {
     const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const toast = useToast();
 
     const addSeller = async (event) => {
         event.preventDefault();
@@ -24,6 +25,24 @@ export default function AddSellerPage() {
             .then(response => response.json())
             .then(data => {
                 console.log('Success: ' + JSON.stringify(data));
+                if (data.message === 'Seller already exists') {
+                    toast({
+                        title: "Duplicate Seller",
+                        description: data.message,
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+                else {
+                    toast({
+                        title: "Info",
+                        description: data.message,
+                        status: 'success',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
             })
             .catch((error) => {
                 console.error('Error: ' + error);

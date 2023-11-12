@@ -7,7 +7,6 @@ import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
-
     <ChakraProvider>
       <BrowserRouter>
         <Routes>

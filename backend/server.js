@@ -169,14 +169,31 @@ app.post('/seller', (request, response) => {
     const { first_name, last_name, address } = request.body;
     const values = [first_name, last_name, address];
     const sql = `INSERT INTO seller (first_name, last_name, address) VALUES (?, ?, ?)`;
+    const matchingUser = `SELECT * FROM seller 
+        WHERE first_name = ? AND last_name = ? AND address = ?
+        LIMIT 1;`;
 
-    db.query(sql, values, (err, result) => {
+    db.query(matchingUser, values, (err, result) => {
         if (err) {
             return response.json(err);
         }
 
-        return response.json({ message: 'Product created successfully', seller: { first_name, last_name, address } });
+        // Check if a seller was not found
+        if (result.length === 0) {
+            db.query(sql, values, (err, result) => {
+                if (err) {
+                    return response.json(err);
+                }
+
+                return response.json({ message: 'Seller created successfully', seller: { first_name, last_name, address } });
+            });
+        }
+        else {
+            response.status(500).send({ message: 'Seller already exists' });
+        }
     });
+
+
 
     console.log(JSON.stringify(newItem));
 });
