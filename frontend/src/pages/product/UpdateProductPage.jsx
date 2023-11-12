@@ -63,17 +63,19 @@ export default function UpdateProductPage() {
     }, [sellerData]);
 
     useEffect(() => {
-        getInitialData([{ url: PRODUCT_URL, setData: setProductData }]);
+        if (!productDataIsLoaded) {
+            getInitialData([{ url: PRODUCT_URL, setData: setProductData }]);
 
-        if (productData) {
-            setProductDataIsLoaded(true);
-            let options = [];
+            if (productData) {
+                setProductDataIsLoaded(true);
+                let options = [];
 
-            for (let i = 0; i < productData.length; i++) {
-                options.push({ label: productData[i].description, key: productData[i].id, value: productData[i].id });
+                for (let i = 0; i < productData.length; i++) {
+                    options.push({ label: productData[i].description, key: productData[i].id, value: productData[i].id });
+                }
+
+                setProductOptions(options);
             }
-
-            setProductOptions(options);
         }
         // eslint-disable-next-line
     }, [productData]);
