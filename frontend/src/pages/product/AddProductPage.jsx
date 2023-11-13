@@ -79,6 +79,7 @@ export default function AddProductPage() {
                                 value={seller}
                                 onChange={(event) => setSeller(event.target.value)}
                             >
+                                <option value="" key={-1}>N/A</option>
                                 {sellerOptions && sellerOptions.map(seller => {
                                     return (
                                         <option

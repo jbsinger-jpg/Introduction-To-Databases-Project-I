@@ -29,6 +29,7 @@ export default function UpdateRenterPage() {
             .then(response => response.json())
             .then(data => {
                 console.log('Success: ' + JSON.stringify(data));
+                getInitialData([{ url: RENTER_URL, setData: setRenterData }]);
             })
             .catch((error) => {
                 console.error('Error: ' + error);
@@ -78,6 +79,7 @@ export default function UpdateRenterPage() {
                                         value={selectedRenterOption}
                                         onChange={(event) => setSelectedRenterOption(event.target.value)}
                                     >
+                                        <option value="" key={-1}>N/A</option>
                                         {renterOptions && renterOptions.map(renter => {
                                             return (
                                                 <option

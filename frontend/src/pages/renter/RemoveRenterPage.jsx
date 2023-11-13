@@ -3,29 +3,20 @@ import { RENTER_URL, getInitialData } from '../../backend_config';
 import { Box, Button, FormLabel, HStack, Heading, Select, VStack } from '@chakra-ui/react';
 
 export default function RemoveRenterPage() {
-    const [address, setAddress] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-
     const [renterData, setRenterData] = useState(null);
     const [renterOptions, setRenterOptions] = useState(null);
-    const [selectedRenterOption, setselectedRenterOption] = useState("");
+    const [selectedRenterOption, setSelectedRenterOption] = useState("");
     const [renterDataIsLoaded, setRenterDataIsLoaded] = useState(false);
 
     const removeRenter = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await fetch(RENTER_URL, {
+            const response = await fetch(`${RENTER_URL}/${selectedRenterOption}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    first_name: firstName,
-                    last_name: lastName,
-                    address: address,
-                }),
             });
 
             if (!response.ok) {
@@ -35,16 +26,11 @@ export default function RemoveRenterPage() {
             // Process the successful response
             const result = await response.json();
             console.log('DELETE successful:', result);
+
+            getInitialData([{ url: RENTER_URL, setData: setRenterData }]);
         } catch (error) {
             console.error('DELETE request error:', error.message);
         }
-    };
-
-
-    const handleClearEntries = () => {
-        setAddress("");
-        setFirstName("");
-        setLastName("");
     };
 
     useEffect(() => {
@@ -79,8 +65,9 @@ export default function RemoveRenterPage() {
                                 <FormLabel>Renter Options</FormLabel>
                                 <Select w="50vw"
                                     value={selectedRenterOption}
-                                    onChange={(event) => setselectedRenterOption(event.target.value)}
+                                    onChange={(event) => setSelectedRenterOption(event.target.value)}
                                 >
+                                    <option value="" key={-1}>N/A</option>
                                     {renterOptions && renterOptions.map(renter => {
                                         return (
                                             <option
@@ -94,7 +81,7 @@ export default function RemoveRenterPage() {
                                 </Select>
                                 <HStack bottom="0" position="fixed" w="90vw">
                                     <Button type="submit"> Submit </Button>
-                                    <Button onClick={handleClearEntries}> Clear </Button>
+                                    {/* <Button onClick={handleClearEntries}> Clear </Button> */}
                                 </HStack>
                             </VStack>
                         </form>

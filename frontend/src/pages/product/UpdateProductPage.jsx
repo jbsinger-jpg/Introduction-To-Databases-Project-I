@@ -100,6 +100,7 @@ export default function UpdateProductPage() {
                                         value={selectedProductOption}
                                         onChange={(event) => setSelectedProductOption(event.target.value)}
                                     >
+                                        <option value="" key={-1}>N/A</option>
                                         {productOptions && productOptions.map(product => {
                                             return (
                                                 <option

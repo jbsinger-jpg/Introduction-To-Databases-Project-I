@@ -84,6 +84,7 @@ export default function RemoveSeller() {
                                         value={selectedSellerOption}
                                         onChange={(event) => setSelectedSellerOption(event.target.value)}
                                     >
+                                        <option value="" key={-1}>N/A</option>
                                         {sellerOptions && sellerOptions.map(seller => {
                                             return (
                                                 <option
