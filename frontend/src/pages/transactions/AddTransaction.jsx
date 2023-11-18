@@ -34,9 +34,10 @@ export default function AddTransaction() {
             },
             body: JSON.stringify({
                 startTime: startTime,
+                endTime: endTime,
                 seller: seller,
                 renter: renter,
-                endTime: endTime,
+                product: product,
             })
         })
             .then(response => response.json())
