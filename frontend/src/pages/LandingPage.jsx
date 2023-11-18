@@ -12,6 +12,8 @@ import RemoveSeller from './seller/RemoveSeller';
 import AddProductPage from './product/AddProductPage';
 import UpdateProductPage from './product/UpdateProductPage';
 import RemoveProductPage from './product/RemoveProductPage';
+import AddTransaction from './transactions/AddTransaction';
+import DeleteTransaction from './transactions/DeleteTransaction';
 
 export default function LandingPage() {
     const [seletedCRUDOperation, setSeletedCRUDOperation] = useState("add");
@@ -28,6 +30,7 @@ export default function LandingPage() {
                     <Tab>Renter</Tab>
                     <Tab>Seller</Tab>
                     <Tab>Product</Tab>
+                    <Tab>Transaction</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>
@@ -70,6 +73,19 @@ export default function LandingPage() {
                         {seletedCRUDOperation === "add" && <AddProductPage />}
                         {seletedCRUDOperation === "update" && <UpdateProductPage />}
                         {seletedCRUDOperation === "delete" && <RemoveProductPage />}
+                    </TabPanel>
+                    <TabPanel>
+                        <Select
+                            value={seletedCRUDOperation}
+                            onChange={(event) => setSeletedCRUDOperation(event.target.value)}
+                        >
+                            <option value='add'>Add</option>
+                            <option value='update'>Update</option>
+                            <option value='delete'>Delete</option>
+                        </Select>
+                        {seletedCRUDOperation === "add" && <AddTransaction />}
+                        {seletedCRUDOperation === "update" && <UpdateProductPage />}
+                        {seletedCRUDOperation === "delete" && <DeleteTransaction />}
                     </TabPanel>
                 </TabPanels>
             </Tabs>
