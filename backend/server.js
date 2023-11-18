@@ -179,3 +179,51 @@ app.delete('/seller/:id', (request, response) => {
         response.json({ message: 'Renter deleted successfully' });
     });
 });
+
+// ========================================================================================================================================================================================================================
+// transaction CRUD operations
+// ========================================================================================================================================================================================================================
+app.post('/transaction', (request, response) => {
+    // ===============================
+    // REQUEST BODY:
+    // ===============================
+    // startTime: startTime,
+    // endTime: endTime,
+    // seller: seller,
+    // renter: renter,
+    // product: product,
+    // ===============================
+    const newItem = request.body;
+    const { start_time, end_time, seller, renter, product } = request.body;
+    const values = [start_time, end_time, seller, renter, product];
+    const sql = `INSERT INTO transaction (start_time, end_time, seller, renter, product) VALUES (?, ?, ?. ?, ?)`;
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Transaction created successfully', transaction: newItem });
+    });
+
+    console.log(JSON.stringify(newItem));
+});
+
+app.delete('/transaction/:id', (request, response) => {
+    const id = request.params.id;
+    const deleteSql = `
+      DELETE FROM transaction
+      WHERE id = ?;`;
+
+    // Execute the delete query
+    db.query(deleteSql, [id], (deleteError) => {
+        if (deleteError) {
+            console.error('Error executing delete query:', deleteError);
+            response.status(500).send('Internal Server Error');
+            return;
+        }
+
+        // Send the deleted renter information back as JSON
+        response.json({ message: 'Transaction deleted successfully' });
+    });
+});
