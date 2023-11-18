@@ -20,7 +20,7 @@ export default function AddProductPage() {
             },
             body: JSON.stringify({
                 price: price,
-                seller: seller,
+                seller_id: seller,
                 description: description
             })
         })

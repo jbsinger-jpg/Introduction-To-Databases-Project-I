@@ -4,10 +4,6 @@ import { Box, Button, FormLabel, HStack, Heading, Select, VStack } from '@chakra
 import { PRODUCT_URL, getInitialData } from '../../backend_config';
 
 export default function RemoveProductPage() {
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
-    const [renter, setRenter] = useState("");
-
     const [productData, setProductData] = useState(null);
     const [productOptions, setProductOptions] = useState(null);
     const [productDataIsLoaded, setProductDataIsLoaded] = useState(false);
@@ -17,16 +13,11 @@ export default function RemoveProductPage() {
         event.preventDefault();
 
         try {
-            const response = await fetch(PRODUCT_URL, {
+            const response = await fetch(`${PRODUCT_URL}/${selectedProductOption}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    price: price,
-                    renter: renter,
-                    description: description
-                }),
             });
 
             if (!response.ok) {
@@ -42,9 +33,7 @@ export default function RemoveProductPage() {
     };
 
     const handleClearEntries = () => {
-        setDescription("");
-        setPrice("");
-        setRenter("");
+        setSelectedProductOption("");
     };
 
     useEffect(() => {

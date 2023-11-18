@@ -94,6 +94,42 @@ app.get('/product', (request, response) => {
     });
 });
 
+app.post('/product', (request, response) => {
+    const newItem = request.body;
+    const { price, seller_id, description } = request.body;
+    const values = [price, seller_id, description];
+    const sql = `INSERT INTO product (price, seller_id, description) VALUES (?, ?, ?)`;
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Product created successfully', product: newItem });
+    });
+
+    console.log(JSON.stringify(newItem));
+});
+
+app.delete('/product/:id', (request, response) => {
+    const id = request.params.id;
+    const deleteSql = `
+      DELETE FROM product
+      WHERE id = ?;`;
+
+    // Execute the delete query
+    db.query(deleteSql, [id], (deleteError) => {
+        if (deleteError) {
+            console.error('Error executing delete query:', deleteError);
+            response.status(500).send('Internal Server Error');
+            return;
+        }
+
+        // Send the deleted renter information back as JSON
+        response.json({ message: 'Product deleted successfully' });
+    });
+});
+
 // ========================================================================================================================================================================================================================
 // seller CRUD operations
 // ========================================================================================================================================================================================================================
