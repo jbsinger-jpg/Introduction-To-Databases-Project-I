@@ -3,8 +3,6 @@ import { PRODUCT_URL, RENTER_URL, SELLER_URL, TRANSACTION_URL, getInitialData } 
 import { Box, Button, FormLabel, HStack, Heading, Select, VStack } from "@chakra-ui/react";
 
 export default function DeleteTransaction() {
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
 
     // transaction data
     const [transactionData, setTransactionData] = useState(null);
@@ -34,16 +32,11 @@ export default function DeleteTransaction() {
         event.preventDefault();
 
         try {
-            const response = await fetch(TRANSACTION_URL, {
+            const response = await fetch(`${TRANSACTION_URL}/${transaction}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    price: price,
-                    renter: renter,
-                    description: description
-                }),
             });
 
             if (!response.ok) {
@@ -53,15 +46,18 @@ export default function DeleteTransaction() {
             // Process the successful response
             const result = await response.json();
             console.log('DELETE successful:', result);
+
+            getInitialData([{ url: TRANSACTION_URL, setData: setTransactionData }]);
         } catch (error) {
             console.error('DELETE request error:', error.message);
         }
     };
 
     const handleClearEntries = () => {
-        setDescription("");
-        setPrice("");
         setRenter("");
+        setSeller("");
+        setTransaction("");
+        setProduct("");
     };
 
     useEffect(() => {

@@ -3,10 +3,6 @@ import { useEffect, useState } from 'react';
 import { SELLER_URL, getInitialData } from '../../backend_config';
 
 export default function RemoveSeller() {
-    const [address, setAddress] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-
     const [sellerData, setSellerData] = useState(null);
     const [sellerDataIsLoaded, setSellerDataIsLoaded] = useState(false);
     const [sellerOptions, setSellerOptions] = useState(null);
@@ -16,16 +12,11 @@ export default function RemoveSeller() {
         event.preventDefault();
 
         try {
-            const response = await fetch(SELLER_URL, {
+            const response = await fetch(`${SELLER_URL}/${selectedSellerOption}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    first_name: firstName,
-                    last_name: lastName,
-                    address: address,
-                }),
             });
 
             if (!response.ok) {
@@ -35,15 +26,15 @@ export default function RemoveSeller() {
             // Process the successful response
             const result = await response.json();
             console.log('DELETE successful:', result);
+
+            getInitialData([{ url: SELLER_URL, setData: setSellerData }]);
         } catch (error) {
             console.error('DELETE request error:', error.message);
         }
     };
 
     const handleClearEntries = () => {
-        setAddress("");
-        setFirstName("");
-        setLastName("");
+        setSelectedSellerOption("");
     };
 
     useEffect(() => {
