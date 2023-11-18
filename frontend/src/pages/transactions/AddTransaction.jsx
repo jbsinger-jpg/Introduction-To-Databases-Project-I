@@ -5,6 +5,7 @@ import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack } from '
 export default function AddTransaction() {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
+    const [alias, setAlias] = useState("");
 
     // Seller variables
     const [seller, setSeller] = useState("");
@@ -33,11 +34,12 @@ export default function AddTransaction() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                startTime: startTime,
-                endTime: endTime,
-                seller: seller,
-                renter: renter,
-                product: product,
+                start_time: startTime,
+                end_time: endTime,
+                seller_id: seller,
+                renter_id: renter,
+                product_id: product,
+                alias: alias
             })
         })
             .then(response => response.json())
@@ -110,6 +112,12 @@ export default function AddTransaction() {
                     <VStack
                         alignItems="flex-start"
                     >
+                        <VStack
+                            alignItems="flex-start"
+                        >
+                            <FormLabel>Alias</FormLabel>
+                            <Input w="50vw" value={alias} onChange={(event) => setAlias(event.target.value)} />
+                        </VStack>
                         <VStack
                             alignItems="flex-start"
                         >

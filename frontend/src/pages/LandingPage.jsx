@@ -14,6 +14,7 @@ import UpdateProductPage from './product/UpdateProductPage';
 import RemoveProductPage from './product/RemoveProductPage';
 import AddTransaction from './transactions/AddTransaction';
 import DeleteTransaction from './transactions/DeleteTransaction';
+import UpdateTransaction from './transactions/UpdateTransaction';
 
 export default function LandingPage() {
     const [seletedCRUDOperation, setSeletedCRUDOperation] = useState("add");
@@ -84,7 +85,7 @@ export default function LandingPage() {
                             <option value='delete'>Delete</option>
                         </Select>
                         {seletedCRUDOperation === "add" && <AddTransaction />}
-                        {seletedCRUDOperation === "update" && <UpdateProductPage />}
+                        {seletedCRUDOperation === "update" && <UpdateTransaction />}
                         {seletedCRUDOperation === "delete" && <DeleteTransaction />}
                     </TabPanel>
                 </TabPanels>

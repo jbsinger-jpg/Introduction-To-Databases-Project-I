@@ -183,6 +183,17 @@ app.delete('/seller/:id', (request, response) => {
 // ========================================================================================================================================================================================================================
 // transaction CRUD operations
 // ========================================================================================================================================================================================================================
+app.get('/transaction', (request, response) => {
+    const sql = "SELECT * FROM transaction";
+    db.query(sql, (err, data) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json(data);
+    });
+});
+
 app.post('/transaction', (request, response) => {
     // ===============================
     // REQUEST BODY:
@@ -194,9 +205,9 @@ app.post('/transaction', (request, response) => {
     // product: product,
     // ===============================
     const newItem = request.body;
-    const { start_time, end_time, seller, renter, product } = request.body;
-    const values = [start_time, end_time, seller, renter, product];
-    const sql = `INSERT INTO transaction (start_time, end_time, seller, renter, product) VALUES (?, ?, ?. ?, ?)`;
+    const { start_time, end_time, seller_id, renter_id, product_id, alias } = request.body;
+    const values = [start_time, end_time, seller_id, renter_id, product_id, alias];
+    const sql = `INSERT INTO transaction (start_time, end_time, seller_id, renter_id, product_id, alias) VALUES (?, ?, ?, ?, ?, ?)`;
 
     db.query(sql, values, (err, result) => {
         if (err) {
