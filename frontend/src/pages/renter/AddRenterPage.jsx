@@ -50,19 +50,34 @@ export default function AddRenterPage() {
                             alignItems="flex-start"
                         >
                             <FormLabel>First Name</FormLabel>
-                            <Input w="50vw" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
+                            <Input
+                                w="50vw"
+                                value={firstName}
+                                onChange={(event) => setFirstName(event.target.value)}
+                                isRequired
+                            />
                         </VStack>
                         <VStack
                             alignItems="flex-start"
                         >
                             <FormLabel>Last Name</FormLabel>
-                            <Input w="50vw" value={lastName} onChange={(event) => setLastName(event.target.value)} />
+                            <Input
+                                w="50vw"
+                                value={lastName}
+                                onChange={(event) => setLastName(event.target.value)}
+                                isRequired
+                            />
                         </VStack>
                         <VStack
                             alignItems="flex-start"
                         >
                             <FormLabel>Address</FormLabel>
-                            <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
+                            <Input
+                                w="50vw"
+                                value={address}
+                                onChange={(event) => setAddress(event.target.value)}
+                                isRequired
+                            />
                         </VStack>
                         <HStack bottom="0" position="fixed" w="90vw">
                             <Button type="submit"> Submit </Button>

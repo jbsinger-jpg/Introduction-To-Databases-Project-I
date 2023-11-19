@@ -80,6 +80,26 @@ app.post('/renter', (request, response) => {
     console.log(JSON.stringify(newItem));
 });
 
+app.patch('/renter/:id', (request, response) => {
+    const id = request.params.id;
+    const { first_name, last_name, address } = request.body;
+    const values = [first_name, last_name, address];
+    const updateSql = `
+      UPDATE renter
+      SET first_name = ?, last_name = ?, address = ?
+      WHERE id = ${id};`;
+
+    db.query(updateSql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Renter updated successfully', renter: { first_name, last_name, address } });
+    });
+});
+
+
+
 // ========================================================================================================================================================================================================================
 // product CRUD operations
 // ========================================================================================================================================================================================================================

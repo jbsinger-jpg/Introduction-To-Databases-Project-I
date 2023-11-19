@@ -15,8 +15,8 @@ export default function UpdateRenterPage() {
     const updateRenter = async (event) => {
         event.preventDefault();
 
-        await fetch(RENTER_URL, {
-            method: 'POST',
+        await fetch(`${RENTER_URL}/${selectedRenterOption}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -77,7 +77,17 @@ export default function UpdateRenterPage() {
                                     <FormLabel>Renter Options</FormLabel>
                                     <Select w="50vw"
                                         value={selectedRenterOption}
-                                        onChange={(event) => setSelectedRenterOption(event.target.value)}
+                                        onChange={(event) => {
+                                            setSelectedRenterOption(event.target.value);
+
+                                            for (let i = 0; i < renterData.length; i++) {
+                                                if (Number(renterData[i].id) === Number(event.target.value)) {
+                                                    setFirstName(renterData[i].first_name);
+                                                    setLastName(renterData[i].last_name);
+                                                    setAddress(renterData[i].address);
+                                                }
+                                            }
+                                        }}
                                     >
                                         <option value="" key={-1}>N/A</option>
                                         {renterOptions && renterOptions.map(renter => {
