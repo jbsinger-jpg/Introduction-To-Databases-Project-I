@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PRODUCT_URL, RENTER_URL, SELLER_URL, TRANSACTION_URL, getInitialData } from "../../backend_config";
-import { Box, Button, FormLabel, HStack, Heading, Select, VStack } from "@chakra-ui/react";
+import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack } from "@chakra-ui/react";
 
 export default function UpdateTransaction() {
     // transaction data
@@ -8,6 +8,8 @@ export default function UpdateTransaction() {
     const [transactionOptions, setTransactionOptions] = useState(null);
     const [transactionDataIsLoaded, setTransactionDataIsLoaded] = useState(false);
     const [transaction, setTransaction] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
 
     // Seller variables
     const [seller, setSeller] = useState("");
@@ -57,6 +59,8 @@ export default function UpdateTransaction() {
         setSeller("");
         setTransaction("");
         setProduct("");
+        setEndTime("");
+        setStartTime("");
     };
 
     useEffect(() => {
@@ -138,6 +142,8 @@ export default function UpdateTransaction() {
                                                     setSeller(transactionData[i].seller_id);
                                                     setRenter(transactionData[i].renter_id);
                                                     setProduct(transactionData[i].product_id);
+                                                    setStartTime(transactionData[i].start_time);
+                                                    setEndTime(transactionData[i].end_time);
                                                 }
                                                 else {
                                                     handleClearEntries();
@@ -216,6 +222,18 @@ export default function UpdateTransaction() {
                                             );
                                         })}
                                     </Select>
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>Start Time</FormLabel>
+                                    <Input w="50vw" value={startTime} onChange={(event) => setStartTime(event.target.value)} />
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>End Time</FormLabel>
+                                    <Input w="50vw" value={endTime} onChange={(event) => setEndTime(event.target.value)} />
                                 </VStack>
                                 <HStack bottom="0" position="fixed" w="90vw">
                                     <Button type="submit"> Submit </Button>
