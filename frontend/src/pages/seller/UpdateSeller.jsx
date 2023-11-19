@@ -76,7 +76,19 @@ export default function UpdateSeller() {
                                     <FormLabel>Seller Options</FormLabel>
                                     <Select w="50vw"
                                         value={selectedSellerOption}
-                                        onChange={(event) => setSelectedSellerOption(event.target.value)}
+                                        onChange={(event) => {
+                                            setSelectedSellerOption(event.target.value);
+                                            for (let i = 0; i < sellerData.length; i++) {
+                                                if (Number(sellerData[i].id) === Number(event.target.value)) {
+                                                    setFirstName(sellerData[i].first_name);
+                                                    setLastName(sellerData[i].last_name);
+                                                    setAddress(sellerData[i].address);
+                                                }
+                                                else if (!event.target.value) {
+                                                    handleClearEntries();
+                                                }
+                                            }
+                                        }}
                                     >
                                         <option value="" key={-1}>N/A</option>
                                         {sellerOptions && sellerOptions.map(seller => {

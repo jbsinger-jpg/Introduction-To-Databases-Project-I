@@ -131,7 +131,19 @@ export default function UpdateTransaction() {
                                     <FormLabel>Transaction</FormLabel>
                                     <Select w="50vw"
                                         value={transaction}
-                                        onChange={(event) => setTransaction(event.target.value)}
+                                        onChange={(event) => {
+                                            setTransaction(event.target.value);
+                                            for (let i = 0; i < transactionData.length; i++) {
+                                                if (Number(transactionData[i].id) === Number(event.target.value)) {
+                                                    setSeller(transactionData[i].seller_id);
+                                                    setRenter(transactionData[i].renter_id);
+                                                    setProduct(transactionData[i].product_id);
+                                                }
+                                                else {
+                                                    handleClearEntries();
+                                                }
+                                            }
+                                        }}
                                     >
                                         <option value="" key={-1}>N/A</option>
                                         {transactionOptions && transactionOptions.map(transaction => {

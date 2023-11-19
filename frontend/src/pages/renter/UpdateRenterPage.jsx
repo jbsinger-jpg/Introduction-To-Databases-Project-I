@@ -86,6 +86,9 @@ export default function UpdateRenterPage() {
                                                     setLastName(renterData[i].last_name);
                                                     setAddress(renterData[i].address);
                                                 }
+                                                else if (!event.target.value) {
+                                                    handleClearEntries();
+                                                }
                                             }
                                         }}
                                     >

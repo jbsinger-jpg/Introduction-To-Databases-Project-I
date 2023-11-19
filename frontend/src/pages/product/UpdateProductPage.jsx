@@ -98,7 +98,20 @@ export default function UpdateProductPage() {
                                     <FormLabel>Product Options</FormLabel>
                                     <Select w="50vw"
                                         value={selectedProductOption}
-                                        onChange={(event) => setSelectedProductOption(event.target.value)}
+                                        onChange={(event) => {
+                                            setSelectedProductOption(event.target.value);
+
+                                            for (let i = 0; i < productData.length; i++) {
+                                                if (Number(productData[i].id) === Number(event.target.value)) {
+                                                    setPrice(productData[i].price);
+                                                    setSeller(productData[i].seller_id);
+                                                    setDescription(productData[i].description);
+                                                }
+                                                else if (!event.target.value) {
+                                                    handleClearEntries();
+                                                }
+                                            }
+                                        }}
                                     >
                                         <option value="" key={-1}>N/A</option>
                                         {productOptions && productOptions.map(product => {
@@ -127,6 +140,7 @@ export default function UpdateProductPage() {
                                         value={seller}
                                         onChange={(event) => setSeller(event.target.value)}
                                     >
+                                        <option value="" key={-1}>N/A</option>
                                         {sellerOptions && sellerOptions.map(seller => {
                                             return (
                                                 <option
