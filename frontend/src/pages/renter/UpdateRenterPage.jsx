@@ -6,6 +6,10 @@ export default function UpdateRenterPage() {
     const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [zip, setZip] = useState("");
+    const [street, setStreet] = useState("");
 
     const [renterOptions, setRenterOptions] = useState(null);
     const [renterData, setRenterData] = useState(null);
@@ -23,7 +27,7 @@ export default function UpdateRenterPage() {
             body: JSON.stringify({
                 first_name: firstName,
                 last_name: lastName,
-                address: address
+                address: `${street}, ${city}, ${state}, ${zip}`
             })
         })
             .then(response => response.json())
@@ -40,6 +44,10 @@ export default function UpdateRenterPage() {
         setAddress("");
         setFirstName("");
         setLastName("");
+        setStreet("");
+        setCity("");
+        setState("");
+        setZip("");
     };
 
     useEffect(() => {
@@ -85,6 +93,14 @@ export default function UpdateRenterPage() {
                                                     setFirstName(renterData[i].first_name);
                                                     setLastName(renterData[i].last_name);
                                                     setAddress(renterData[i].address);
+                                                    // Parse the fields from the address place into the appropriate useState field
+                                                    // address always going to be in the format: `${street}, ${city}, ${state}, ${zip}`
+
+                                                    const parsedAddressValues = renterData[i].address.split(",");
+                                                    setStreet(parsedAddressValues[0]);
+                                                    setCity(parsedAddressValues[1]);
+                                                    setState(parsedAddressValues[2]);
+                                                    setZip(parsedAddressValues[3]);
                                                 }
                                                 else if (!event.target.value) {
                                                     handleClearEntries();
@@ -120,8 +136,48 @@ export default function UpdateRenterPage() {
                                 <VStack
                                     alignItems="flex-start"
                                 >
-                                    <FormLabel>Address</FormLabel>
-                                    <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
+                                    <HStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>Street</FormLabel>
+                                            <Input
+                                                value={street}
+                                                onChange={(event) => setStreet(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>City</FormLabel>
+                                            <Input
+                                                value={city}
+                                                onChange={(event) => setCity(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>State</FormLabel>
+                                            <Input
+                                                value={state}
+                                                onChange={(event) => setState(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>Zip</FormLabel>
+                                            <Input
+                                                value={zip}
+                                                onChange={(event) => setZip(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                    </HStack>
                                 </VStack>
                                 <HStack bottom="0" position="fixed" w="90vw">
                                     <Button type="submit"> Submit </Button>
