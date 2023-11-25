@@ -122,13 +122,13 @@ export default function AddTransaction() {
                             alignItems="flex-start"
                         >
                             <FormLabel>Start Time</FormLabel>
-                            <Input w="50vw" value={startTime} onChange={(event) => setStartTime(event.target.value)} />
+                            <Input w="50vw" value={startTime} onChange={(event) => setStartTime(event.target.value)} type="date" />
                         </VStack>
                         <VStack
                             alignItems="flex-start"
                         >
                             <FormLabel>End Time</FormLabel>
-                            <Input w="50vw" value={endTime} onChange={(event) => setEndTime(event.target.value)} />
+                            <Input w="50vw" value={endTime} onChange={(event) => setEndTime(event.target.value)} type="date" />
                         </VStack>
                         <VStack alignItems="start">
                             <FormLabel>Product</FormLabel>
