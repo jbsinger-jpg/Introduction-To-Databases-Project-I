@@ -3,9 +3,12 @@ import { useEffect, useState } from 'react';
 import { SELLER_URL, getInitialData } from '../../backend_config';
 
 export default function UpdateSeller() {
-    const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [zip, setZip] = useState("");
+    const [street, setStreet] = useState("");
 
     const [sellerData, setSellerData] = useState(null);
     const [sellerDataIsLoaded, setSellerDataIsLoaded] = useState(false);
@@ -15,15 +18,15 @@ export default function UpdateSeller() {
     const updateSeller = async (event) => {
         event.preventDefault();
 
-        await fetch(SELLER_URL, {
-            method: 'POST',
+        await fetch(`${SELLER_URL}/${selectedSellerOption}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 first_name: firstName,
                 last_name: lastName,
-                address: address
+                address: `${street}, ${city}, ${state}, ${zip}`
             })
         })
             .then(response => response.json())
@@ -36,9 +39,12 @@ export default function UpdateSeller() {
     };
 
     const handleClearEntries = () => {
-        setAddress("");
         setFirstName("");
         setLastName("");
+        setStreet("");
+        setCity("");
+        setState("");
+        setZip("");
     };
 
     useEffect(() => {
@@ -82,7 +88,12 @@ export default function UpdateSeller() {
                                                 if (Number(sellerData[i].id) === Number(event.target.value)) {
                                                     setFirstName(sellerData[i].first_name);
                                                     setLastName(sellerData[i].last_name);
-                                                    setAddress(sellerData[i].address);
+                                                    const parsedAddressValues = sellerData[i].address.split(",");
+
+                                                    setStreet(parsedAddressValues[0]);
+                                                    setCity(parsedAddressValues[1]);
+                                                    setState(parsedAddressValues[2]);
+                                                    setZip(parsedAddressValues[3]);
                                                 }
                                                 else if (!event.target.value) {
                                                     handleClearEntries();
@@ -118,8 +129,48 @@ export default function UpdateSeller() {
                                 <VStack
                                     alignItems="flex-start"
                                 >
-                                    <FormLabel>Address</FormLabel>
-                                    <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
+                                    <HStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>Street</FormLabel>
+                                            <Input
+                                                value={street}
+                                                onChange={(event) => setStreet(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>City</FormLabel>
+                                            <Input
+                                                value={city}
+                                                onChange={(event) => setCity(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>State</FormLabel>
+                                            <Input
+                                                value={state}
+                                                onChange={(event) => setState(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                        <VStack
+                                            alignItems="flex-start"
+                                        >
+                                            <FormLabel>Zip</FormLabel>
+                                            <Input
+                                                value={zip}
+                                                onChange={(event) => setZip(event.target.value)}
+                                                isRequired
+                                            />
+                                        </VStack>
+                                    </HStack>
                                 </VStack>
                                 <HStack bottom="0" position="fixed" w="90vw">
                                     <Button type="submit"> Submit </Button>

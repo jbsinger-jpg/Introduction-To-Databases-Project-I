@@ -3,7 +3,6 @@ import { RENTER_URL, getInitialData } from '../../backend_config';
 import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack } from '@chakra-ui/react';
 
 export default function UpdateRenterPage() {
-    const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [city, setCity] = useState("");
@@ -41,7 +40,6 @@ export default function UpdateRenterPage() {
     };
 
     const handleClearEntries = () => {
-        setAddress("");
         setFirstName("");
         setLastName("");
         setStreet("");
@@ -92,11 +90,10 @@ export default function UpdateRenterPage() {
                                                 if (Number(renterData[i].id) === Number(event.target.value)) {
                                                     setFirstName(renterData[i].first_name);
                                                     setLastName(renterData[i].last_name);
-                                                    setAddress(renterData[i].address);
                                                     // Parse the fields from the address place into the appropriate useState field
                                                     // address always going to be in the format: `${street}, ${city}, ${state}, ${zip}`
-
                                                     const parsedAddressValues = renterData[i].address.split(",");
+
                                                     setStreet(parsedAddressValues[0]);
                                                     setCity(parsedAddressValues[1]);
                                                     setState(parsedAddressValues[2]);

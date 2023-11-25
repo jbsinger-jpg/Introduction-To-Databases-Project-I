@@ -3,9 +3,12 @@ import { useState } from 'react';
 import { SELLER_URL } from '../../backend_config';
 
 export default function AddSellerPage() {
-    const [address, setAddress] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [zip, setZip] = useState("");
+    const [street, setStreet] = useState("");
     const toast = useToast();
 
     const addSeller = async (event) => {
@@ -19,7 +22,7 @@ export default function AddSellerPage() {
             body: JSON.stringify({
                 first_name: firstName,
                 last_name: lastName,
-                address: address
+                address: `${street}, ${city}, ${state}, ${zip}`
             })
         })
             .then(response => response.json())
@@ -50,9 +53,12 @@ export default function AddSellerPage() {
     };
 
     const handleClearEntries = () => {
-        setAddress("");
         setFirstName("");
         setLastName("");
+        setStreet("");
+        setCity("");
+        setState("");
+        setZip("");
     };
 
     return (
@@ -80,8 +86,48 @@ export default function AddSellerPage() {
                         <VStack
                             alignItems="flex-start"
                         >
-                            <FormLabel>Address</FormLabel>
-                            <Input w="50vw" value={address} onChange={(event) => setAddress(event.target.value)} />
+                            <HStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>Street</FormLabel>
+                                    <Input
+                                        value={street}
+                                        onChange={(event) => setStreet(event.target.value)}
+                                        isRequired
+                                    />
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>City</FormLabel>
+                                    <Input
+                                        value={city}
+                                        onChange={(event) => setCity(event.target.value)}
+                                        isRequired
+                                    />
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>State</FormLabel>
+                                    <Input
+                                        value={state}
+                                        onChange={(event) => setState(event.target.value)}
+                                        isRequired
+                                    />
+                                </VStack>
+                                <VStack
+                                    alignItems="flex-start"
+                                >
+                                    <FormLabel>Zip</FormLabel>
+                                    <Input
+                                        value={zip}
+                                        onChange={(event) => setZip(event.target.value)}
+                                        isRequired
+                                    />
+                                </VStack>
+                            </HStack>
                         </VStack>
                         <HStack bottom="0" position="fixed" w="90vw">
                             <Button type="submit"> Submit </Button>

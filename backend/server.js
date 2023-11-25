@@ -98,8 +98,6 @@ app.patch('/renter/:id', (request, response) => {
     });
 });
 
-
-
 // ========================================================================================================================================================================================================================
 // product CRUD operations
 // ========================================================================================================================================================================================================================
@@ -179,6 +177,24 @@ app.post('/seller', (request, response) => {
     });
 
     console.log(JSON.stringify(newItem));
+});
+
+app.patch('/seller/:id', (request, response) => {
+    const id = request.params.id;
+    const { first_name, last_name, address } = request.body;
+    const values = [first_name, last_name, address];
+    const updateSql = `
+      UPDATE seller
+      SET first_name = ?, last_name = ?, address = ?
+      WHERE id = ${id};`;
+
+    db.query(updateSql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Seller updated successfully', seller: { first_name, last_name, address } });
+    });
 });
 
 app.delete('/seller/:id', (request, response) => {
