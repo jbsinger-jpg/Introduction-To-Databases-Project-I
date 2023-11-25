@@ -112,6 +112,24 @@ app.get('/product', (request, response) => {
     });
 });
 
+app.patch('/product/:id', (request, response) => {
+    const id = request.params.id;
+    const { price, seller_id, description } = request.body;
+    const values = [price, seller_id, description];
+    const updateSql = `
+      UPDATE product
+      SET price = ?, seller_id = ?, description = ?
+      WHERE id = ${id};`;
+
+    db.query(updateSql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Product updated successfully', product: { price, seller_id, description } });
+    });
+});
+
 app.post('/product', (request, response) => {
     const newItem = request.body;
     const { price, seller_id, description } = request.body;
@@ -227,6 +245,24 @@ app.get('/transaction', (request, response) => {
         }
 
         return response.json(data);
+    });
+});
+
+app.patch('/transaction/:id', (request, response) => {
+    const id = request.params.id;
+    const { alias, start_time, end_time, product_id, seller_id, renter_id } = request.body;
+    const values = [alias, start_time, end_time, product_id, seller_id, renter_id];
+    const updateSql = `
+      UPDATE product
+      SET alias = ?, start_time = ?, end_time = ?, product_id = ?, seller_id = ?, renter_id = ?,
+      WHERE id = ${id};`;
+
+    db.query(updateSql, values, (err, result) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: 'Transaction updated successfully', transaction: { ...request.body } });
     });
 });
 
