@@ -14,42 +14,67 @@ export default function AddSellerPage() {
     const addSeller = async (event) => {
         event.preventDefault();
 
-        await fetch(SELLER_URL, {
-            method: 'POST',
+        let matchFound = false;
+
+        await fetch(`${SELLER_URL}/matching?first_name=${firstName}&last_name=${lastName}&address=${street}, ${city}, ${state}, ${zip}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                address: `${street}, ${city}, ${state}, ${zip}`
-            })
+            }
         })
             .then(response => response.json())
-            .then(data => {
-                console.log('Success: ' + JSON.stringify(data));
-                if (data.message === 'Seller already exists') {
+            .then((response) => {
+                if (response.data.length) {
                     toast({
-                        title: "Duplicate Seller",
-                        description: data.message,
+                        title: "Error!",
+                        description: JSON.stringify(response.message),
                         status: 'error',
                         duration: 9000,
                         isClosable: true,
                     });
+
+                    matchFound = true;
                 }
-                else {
-                    toast({
-                        title: "Info",
-                        description: data.message,
-                        status: 'success',
-                        duration: 9000,
-                        isClosable: true,
-                    });
-                }
-            })
-            .catch((error) => {
-                console.error('Error: ' + error);
             });
+
+        if (!matchFound) {
+            await fetch(SELLER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    address: `${street}, ${city}, ${state}, ${zip}`
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success: ' + JSON.stringify(data));
+                    if (data.message === 'Seller already exists') {
+                        toast({
+                            title: "Duplicate Seller",
+                            description: data.message,
+                            status: 'error',
+                            duration: 9000,
+                            isClosable: true,
+                        });
+                    }
+                    else {
+                        toast({
+                            title: "Info",
+                            description: data.message,
+                            status: 'success',
+                            duration: 9000,
+                            isClosable: true,
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error: ' + error);
+                });
+        }
     };
 
     const handleClearEntries = () => {

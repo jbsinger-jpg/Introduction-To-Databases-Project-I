@@ -193,6 +193,19 @@ app.get('/seller', (request, response) => {
     });
 });
 
+app.get('/seller/matching', (request, response) => {
+    const { first_name, last_name, address } = request.query;
+
+    const sql = `SELECT * FROM seller WHERE first_name = ? AND last_name = ? AND address = ?;`;
+    db.query(sql, [first_name, last_name, address], (err, data) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: "A seller with these values already exists!", data: data });
+    });
+});
+
 app.post('/seller', (request, response) => {
     const newItem = request.body;
     const { first_name, last_name, address } = request.body;

@@ -22,16 +22,18 @@ export default function AddRenterPage() {
             }
         })
             .then(response => response.json())
-            .then((data) => {
-                toast({
-                    title: "Error!",
-                    description: JSON.stringify(data),
-                    status: 'error',
-                    duration: 9000,
-                    isClosable: true,
-                });
+            .then((response) => {
+                if (response.data.length) {
+                    toast({
+                        title: "Error!",
+                        description: JSON.stringify(response.message),
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
 
-                matchFound = true;
+                    matchFound = true;
+                }
             });
 
         if (!matchFound) {
