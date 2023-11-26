@@ -125,6 +125,19 @@ app.get('/product', (request, response) => {
     });
 });
 
+app.get('/product/matching', (request, response) => {
+    const { price, seller_id, description } = request.query;
+    const sql = `SELECT * FROM product WHERE price = ? AND seller_id = ? AND description = ?;`;
+
+    db.query(sql, [price, seller_id, description], (err, data) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: "A product with these values already exists!", data: data });
+    });
+});
+
 app.patch('/product/:id', (request, response) => {
     const id = request.params.id;
     const { price, seller_id, description } = request.body;
@@ -271,6 +284,24 @@ app.get('/transaction', (request, response) => {
         }
 
         return response.json(data);
+    });
+});
+
+app.get('/transaction/matching', (req, res) => {
+    const { start_time, end_time, product_id, seller_id, renter_id } = request.query;
+    const sql = `SELECT * FROM transaction 
+       WHERE start_time = ? 
+       AND end_time = ? 
+       AND product_id = ?
+       AND seller_id = ?
+       AND renter_id = ?;`;
+
+    db.query(sql, [start_time, end_time, product_id, seller_id, renter_id], (err, data) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: "A transaction with these values already exists!", data: data });
     });
 });
 
