@@ -13,7 +13,6 @@ export default function AddSellerPage() {
 
     const addSeller = async (event) => {
         event.preventDefault();
-
         let matchFound = false;
 
         await fetch(`${SELLER_URL}/matching?first_name=${firstName}&last_name=${lastName}&address=${street}, ${city}, ${state}, ${zip}`, {
