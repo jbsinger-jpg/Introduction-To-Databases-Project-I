@@ -289,12 +289,7 @@ app.get('/transaction', (request, response) => {
 
 app.get('/transaction/matching', (req, res) => {
     const { start_time, end_time, product_id, seller_id, renter_id } = request.query;
-    const sql = `SELECT * FROM transaction 
-       WHERE start_time = ? 
-       AND end_time = ? 
-       AND product_id = ?
-       AND seller_id = ?
-       AND renter_id = ?;`;
+    const sql = `SELECT * FROM transaction WHERE start_time = ? AND end_time = ? AND product_id = ? AND seller_id = ? AND renter_id = ?;`;
 
     db.query(sql, [start_time, end_time, product_id, seller_id, renter_id], (err, data) => {
         if (err) {

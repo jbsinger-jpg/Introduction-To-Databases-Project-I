@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PRODUCT_URL, RENTER_URL, SELLER_URL, TRANSACTION_URL, getInitialData } from '../../backend_config';
-import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack } from '@chakra-ui/react';
+import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack, useToast } from '@chakra-ui/react';
 
 export default function AddTransaction() {
     const [startTime, setStartTime] = useState("");
@@ -24,31 +24,56 @@ export default function AddTransaction() {
     const [productOptions, setProductOptions] = useState([]);
     const [productData, setProductData] = useState(null);
     const [productDataIsLoaded, setProductDataIsLoaded] = useState(false);
+    const toast = useToast();
 
     const addTransaction = async (event) => {
         event.preventDefault();
+        let matchFound = false;
 
-        await fetch(TRANSACTION_URL, {
-            method: 'POST',
+        await fetch(`${TRANSACTION_URL}/matching?start_time=${startTime}&end_time=${endTime}&product_id=${product}&seller_id=${seller}&renter_id=${renter}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                start_time: startTime,
-                end_time: endTime,
-                seller_id: seller,
-                renter_id: renter,
-                product_id: product,
-                alias: alias
-            })
+            }
         })
             .then(response => response.json())
-            .then(data => {
-                console.log('Success: ' + JSON.stringify(data));
-            })
-            .catch((error) => {
-                console.error('Error: ' + error);
+            .then((response) => {
+                if (response.data.length) {
+                    toast({
+                        title: "Error!",
+                        description: JSON.stringify(response.message),
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+
+                    matchFound = true;
+                }
             });
+
+        if (!matchFound) {
+            await fetch(TRANSACTION_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    start_time: startTime,
+                    end_time: endTime,
+                    seller_id: seller,
+                    renter_id: renter,
+                    product_id: product,
+                    alias: alias
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success: ' + JSON.stringify(data));
+                })
+                .catch((error) => {
+                    console.error('Error: ' + error);
+                });
+        }
     };
 
     const handleClearEntries = () => {

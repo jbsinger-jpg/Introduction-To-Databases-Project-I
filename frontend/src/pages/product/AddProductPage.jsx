@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PRODUCT_URL, SELLER_URL, getInitialData } from '../../backend_config';
-import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack } from '@chakra-ui/react';
+import { Box, Button, FormLabel, HStack, Heading, Input, Select, VStack, useToast } from '@chakra-ui/react';
 
 export default function AddProductPage() {
     const [description, setDescription] = useState("");
@@ -10,27 +10,59 @@ export default function AddProductPage() {
     const [sellerData, setSellerData] = useState(null);
     const [sellerDataIsLoaded, setSellerDataIsLoaded] = useState(false);
 
+    const toast = useToast();
+
     const addProduct = async (event) => {
         event.preventDefault();
+        let matchFound = false;
 
-        await fetch(PRODUCT_URL, {
-            method: 'POST',
+        await fetch(`${PRODUCT_URL}/matching?price=${price}&seller_id=${seller}&description=${description}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                price: price,
-                seller_id: seller,
-                description: description
-            })
+            }
         })
             .then(response => response.json())
-            .then(data => {
-                console.log('Success: ' + JSON.stringify(data));
-            })
-            .catch((error) => {
-                console.error('Error: ' + error);
+            .then((response) => {
+                if (response.data.length) {
+                    toast({
+                        title: "Error!",
+                        description: JSON.stringify(response.message),
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+
+                    matchFound = true;
+                }
             });
+
+        if (!matchFound) {
+            await fetch(PRODUCT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    price: price,
+                    seller_id: seller,
+                    description: description
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    toast({
+                        title: "Success!",
+                        description: JSON.stringify(data),
+                        status: 'success',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error: ' + error);
+                });
+        }
     };
 
     const handleClearEntries = () => {
