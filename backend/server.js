@@ -44,6 +44,19 @@ app.get('/renter', (request, response) => {
     });
 });
 
+app.get('/renter/matching', (request, response) => {
+    const { first_name, last_name, address } = request.query;
+
+    const sql = `SELECT * FROM renter WHERE first_name = ? AND last_name = ? AND address = ?;`;
+    db.query(sql, [first_name, last_name, address], (err, data) => {
+        if (err) {
+            return response.json(err);
+        }
+
+        return response.json({ message: "A renter with these values already exists!", data: data });
+    });
+});
+
 app.delete('/renter/:id', (request, response) => {
     const id = request.params.id;
     const deleteSql = `
@@ -74,7 +87,7 @@ app.post('/renter', (request, response) => {
             return response.json(err);
         }
 
-        return response.json({ message: 'Product created successfully', renter: { first_name, last_name, address } });
+        return response.json({ message: 'Renter created successfully', renter: { first_name, last_name, address } });
     });
 
     console.log(JSON.stringify(newItem));

@@ -1,4 +1,4 @@
-import { Box, Button, FormLabel, HStack, Heading, Input, VStack } from '@chakra-ui/react';
+import { Box, Button, FormLabel, HStack, Heading, Input, VStack, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { RENTER_URL } from '../../backend_config';
 
@@ -9,28 +9,63 @@ export default function AddRenterPage() {
     const [state, setState] = useState("");
     const [zip, setZip] = useState("");
     const [street, setStreet] = useState("");
+    const toast = useToast();
 
     const addRenter = async (event) => {
         event.preventDefault();
+        let matchFound = false;
 
-        await fetch(RENTER_URL, {
-            method: 'POST',
+        await fetch(`${RENTER_URL}/matching?first_name=${firstName}&last_name=${lastName}&address=${street}, ${city}, ${state}, ${zip}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                address: `${street}, ${city}, ${state}, ${zip}`
-            })
+            }
         })
             .then(response => response.json())
-            .then(data => {
-                console.log('Success: ' + JSON.stringify(data));
-            })
-            .catch((error) => {
-                console.error('Error: ' + error);
+            .then((data) => {
+                toast({
+                    title: "Error!",
+                    description: JSON.stringify(data),
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                });
+
+                matchFound = true;
             });
+
+        if (!matchFound) {
+            await fetch(RENTER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    address: `${street}, ${city}, ${state}, ${zip}`
+                })
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    toast({
+                        title: "Success!",
+                        description: JSON.stringify(data),
+                        status: 'success',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                })
+                .catch((error) => {
+                    toast({
+                        title: "Error",
+                        description: JSON.stringify(error),
+                        status: 'error',
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                });
+        }
     };
 
     const handleClearEntries = () => {
